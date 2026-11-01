@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read benchmarks/*/selection.json: list the job's tasks or images, check consistency.
+"""Read selection.json: list the job's tasks or images, check consistency.
 
     python3 tools/select_tasks.py names <benchmark>         task names job.yaml must list
     python3 tools/select_tasks.py images [--bases] <benchmark>...
@@ -36,7 +36,8 @@ _DURATION = re.compile(r"^([1-9][0-9]*)([smh]?)$")
 
 
 def benchmark_ids() -> list[str]:
-    return sorted(p.parent.name for root in (BENCHMARKS, REPO / "data")
+    return sorted(json.loads(p.read_text())["benchmark"]
+                  for root in (BENCHMARKS, REPO / "data")
                   for p in root.glob("*/selection.json"))
 
 

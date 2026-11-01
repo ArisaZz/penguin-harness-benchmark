@@ -1,5 +1,5 @@
 # Every pattern is rooted on purpose: vendored task directories under
-# benchmarks/*/tasks/ and data/ are copied verbatim and may legitimately contain files
+# data/*/tasks/ are copied verbatim and may legitimately contain files
 # such as .env, *.key or *.pyc that a global pattern would silently drop.
 
 # Harbor job output (trial logs, Penguin data roots with Traces). Never
@@ -9,7 +9,7 @@
 
 # rag-bench-essential's upstream checkout, which tools/rag_bench/fetch.sh downloads
 # for maintainers who regenerate the committed tasks.
-/benchmarks/rag-bench-essential/upstream/
+/data/penguinharness-benchmark-sec-a/upstream/
 
 # Upstream archives downloaded by tools/vendor_hub_tasks.py.
 /.vendor-cache/
