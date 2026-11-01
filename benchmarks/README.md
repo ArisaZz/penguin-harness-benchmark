@@ -1,6 +1,6 @@
 # Benchmarks
 
-Task data for Sec A–E lives under `data/<benchmark-id>/`; GDPEVO currently uses the subdirectories here. Each dataset is packaged as a [Harbor](https://github.com/harbor-framework/harbor) dataset directory plus the metadata that says where its tasks came from and why they were chosen.
+Task data lives under `data/`: `data/<benchmark-id>/` for Sec A–E and `data/<scenario>/` for GDPEVO Essential. Each dataset is packaged as a [Harbor](https://github.com/harbor-framework/harbor) dataset directory plus the metadata that says where its tasks came from and why they were chosen.
 
 | Directory | Upstream | Tasks are |
 | --- | --- | --- |
