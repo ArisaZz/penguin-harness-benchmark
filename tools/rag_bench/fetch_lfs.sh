@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Replace the two Git LFS pointer files in benchmarks/rag-bench-essential/upstream/
+# Replace the two Git LFS pointer files in data/penguinharness-benchmark-sec-a/upstream/
 # (downloaded by fetch.sh) with the objects they point to.
 #
 # For maintainers only, after tools/rag_bench/fetch.sh: the GitHub archive carries LFS
@@ -12,7 +12,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-DEST="$ROOT/benchmarks/rag-bench-essential/upstream"
+DEST="$ROOT/data/penguinharness-benchmark-sec-a/upstream"
 if [[ ! -f "$DEST/.fetched-commit" ]]; then
   echo "$DEST is missing; run tools/rag_bench/fetch.sh first" >&2
   exit 1

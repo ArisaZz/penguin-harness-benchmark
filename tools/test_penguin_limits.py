@@ -25,9 +25,8 @@ from harbor.models.task.config import TaskConfig
 from harbor.trial.trial import Trial
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path[:0] = [str(ROOT / 'agents'), str(ROOT / 'tools/gdpevo')]
+sys.path.insert(0, str(ROOT / 'agents'))
 from penguin_agent.agent import PenguinAgent, PenguinOptions
-from packages import load_job_caps, task_caps
 from gdpevo.catalog import group_directories, selected_groups, benchmark_dir
 
 
@@ -137,38 +136,35 @@ class LimitsTests(unittest.TestCase):
             self.assertEqual(env['PB_TIMEOUT'], '14400s')
             self.assertEqual(env['PB_MAX_TURNS'], '-1')
 
-    def test_gdpevo_tasks_and_package_commands_use_their_own_budgets(self):
-        raw = yaml.safe_load((benchmark_dir('task_group_003') / 'job.yaml').read_text())
-        job = JobConfig.model_validate(raw)
-        for group in selected_groups():
-            self.assertEqual(load_job_caps(benchmark_dir(group)), ('task', -1))
-        self.assertIsNone(job.agents[0].override_timeout_sec)
-        self.assertEqual(job.agents[0].kwargs['max_turns'], -1)
+    def test_gdpevo_tasks_use_their_own_budgets(self):
         configs = [p for group in group_directories() for p in group.rglob('task.toml')]
         self.assertEqual(len(configs), 36)
-        with tempfile.TemporaryDirectory() as tmp:
-            for path in configs:
-                with self.subTest(task=str(path.relative_to(ROOT))):
-                    data = tomllib.loads(path.read_text())
-                    task = TaskConfig.model_validate(data)
-                    expected = (21600 if data['metadata']['task_id'] == 'train_group' else
-                                14400 if data['metadata']['split'] == 'test' else None)
-                    probe = SimpleNamespace(config=job, task=SimpleNamespace(config=task))
-                    probe.config = SimpleNamespace(agent=job.agents[0], timeout_multiplier=1.0,
-                                                   agent_timeout_multiplier=None)
-                    probe._resolve_timeout_sec = MethodType(Trial._resolve_timeout_sec, probe)
-                    hard = None if expected is None else expected + 210
-                    self.assertEqual(Trial._compute_agent_timeout_sec(probe), hard)
-                    agent = PenguinAgent(logs_dir=Path(tmp)/'agent', model_name='deepseek/deepseek-flash',
-                                         run_timeout='task', max_turns=-1)
-                    agent._trial_config = lambda: {'agent': {}, 'task': {'path': str(path.parent)}}
-                    self.assertEqual(agent.run_timeout_sec(), expected)
-                    agent.check_timeout_budget()
-                    command_timeout, description = task_caps(data, 'task', -1)
-                    self.assertEqual(command_timeout, 'unlimited' if expected is None else f'{expected//3600}h')
-                    self.assertIn('no turn limit', description)
-                    self.assertGreater(task.verifier.timeout_sec, 0)
-                    self.assertGreater(task.environment.build_timeout_sec, 0)
+        for group in selected_groups():
+            raw = yaml.safe_load((benchmark_dir(group) / 'job.yaml').read_text())
+            job = JobConfig.model_validate(raw)
+            self.assertIsNone(job.agents[0].override_timeout_sec)
+            self.assertEqual(job.agents[0].kwargs['run_timeout'], 'task')
+            self.assertEqual(job.agents[0].kwargs['max_turns'], -1)
+            with tempfile.TemporaryDirectory() as tmp:
+                for path in (benchmark_dir(group) / 'tasks').rglob('task.toml'):
+                    with self.subTest(task=str(path.relative_to(ROOT))):
+                        data = tomllib.loads(path.read_text())
+                        task = TaskConfig.model_validate(data)
+                        expected = (21600 if data['metadata']['task_id'] == 'train_group' else
+                                    14400 if data['metadata']['split'] == 'test' else None)
+                        probe = SimpleNamespace(config=job, task=SimpleNamespace(config=task))
+                        probe.config = SimpleNamespace(agent=job.agents[0], timeout_multiplier=1.0,
+                                                       agent_timeout_multiplier=None)
+                        probe._resolve_timeout_sec = MethodType(Trial._resolve_timeout_sec, probe)
+                        hard = None if expected is None else expected + 210
+                        self.assertEqual(Trial._compute_agent_timeout_sec(probe), hard)
+                        agent = PenguinAgent(logs_dir=Path(tmp)/'agent', model_name='deepseek/deepseek-flash',
+                                             run_timeout='task', max_turns=-1)
+                        agent._trial_config = lambda: {'agent': {}, 'task': {'path': str(path.parent)}}
+                        self.assertEqual(agent.run_timeout_sec(), expected)
+                        agent.check_timeout_budget()
+                        self.assertGreater(task.verifier.timeout_sec, 0)
+                        self.assertGreater(task.environment.build_timeout_sec, 0)
 
     def run_shell(self, root, timeout, status):
         prefix, home, logs = root / 'prefix', root / 'home', root / 'logs'

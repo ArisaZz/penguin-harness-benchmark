@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read benchmarks/*/selection.json: list the job's tasks or images, check consistency.
+"""Read selection.json: list the job's tasks or images, check consistency.
 
     python3 tools/select_tasks.py names <benchmark>         task names job.yaml must list
     python3 tools/select_tasks.py images [--bases] <benchmark>...
@@ -36,7 +36,8 @@ _DURATION = re.compile(r"^([1-9][0-9]*)([smh]?)$")
 
 
 def benchmark_ids() -> list[str]:
-    return sorted(p.parent.name for root in (BENCHMARKS, REPO / "data")
+    return sorted(json.loads(p.read_text())["benchmark"]
+                  for root in (BENCHMARKS, REPO / "data")
                   for p in root.glob("*/selection.json"))
 
 
@@ -121,7 +122,7 @@ def check(benchmark: str) -> list[str]:
 
     problems: list[str] = []
     selection = load(benchmark)
-    schema = json.loads((BENCHMARKS / "selection.schema.json").read_text())
+    schema = json.loads(Path(__file__).with_name("selection.schema.json").read_text())
     for error in jsonschema.Draft202012Validator(schema).iter_errors(selection):
         location = "/".join(str(part) for part in error.absolute_path) or "(root)"
         problems.append(f"selection.json {location}: {error.message}")
