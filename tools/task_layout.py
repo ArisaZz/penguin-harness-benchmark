@@ -1,6 +1,6 @@
 """Resolve benchmark task IDs to directories and Harbor dataset entries."""
 from pathlib import Path
-from gdpevo.catalog import is_gdpevo, groups
+from gdpevo.catalog import is_gdpevo, groups, benchmark_id
 
 REPO = Path(__file__).resolve().parent.parent
 SECTION_PACKAGES = {
@@ -78,7 +78,7 @@ def execution_task_names(benchmark: str, tasks: list[str]) -> list[str]:
 def task_members(task: str, benchmark: str | None = None) -> list[str]:
     if task == "train_tasks":
         for group, config in groups().items():
-            if config["benchmark_id"] == benchmark:
+            if benchmark in (config["benchmark_id"], benchmark_id(group, "train")):
                 return [f"tg{group[-3:]}-train-{n:03d}" for n in range(1, 6)]
     if task.startswith("tg") and task.endswith("-train"):
         return [f"{task}-{n:03d}" for n in range(1, 6)]
