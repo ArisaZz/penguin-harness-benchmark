@@ -1,0 +1,5 @@
+{
+ "task": "portfolio-management-test-002",
+ "task_id": "test_002",
+ "score_expr": "r['normalized_score']"
+}

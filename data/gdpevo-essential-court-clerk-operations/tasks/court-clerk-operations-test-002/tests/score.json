@@ -1,0 +1,5 @@
+{
+ "task": "court-clerk-operations-test-002",
+ "task_id": "test_002",
+ "score_expr": "r['score']"
+}

@@ -1,5 +1,0 @@
-{
- "task": "legal-test-001",
- "task_id": "test_001",
- "score_expr": "r['score']"
-}

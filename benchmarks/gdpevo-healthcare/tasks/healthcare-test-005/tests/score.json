@@ -1,5 +1,0 @@
-{
- "task": "healthcare-test-005",
- "task_id": "test_005",
- "score_expr": "r['score']"
-}

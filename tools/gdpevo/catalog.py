@@ -16,7 +16,7 @@ def benchmark_id(group: str) -> str:
 
 
 def benchmark_dir(group: str) -> Path:
-    return REPO / "benchmarks" / benchmark_id(group)
+    return REPO / "data" / benchmark_id(group)
 
 
 def selected_groups() -> list[str]:

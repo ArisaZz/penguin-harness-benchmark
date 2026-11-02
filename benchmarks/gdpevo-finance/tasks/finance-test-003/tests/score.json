@@ -1,5 +1,0 @@
-{
- "task": "finance-test-003",
- "task_id": "test_003",
- "score_expr": "r['normalized_score']"
-}

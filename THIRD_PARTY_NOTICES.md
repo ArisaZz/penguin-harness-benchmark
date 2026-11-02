@@ -6,11 +6,11 @@ This repository is Apache-2.0 licensed (see `LICENSE`). It also carries benchmar
 | --- | --- | --- | --- |
 | [AutomationBench](https://github.com/zapier/AutomationBench) (Zapier), commit `4a8e1061254004d9dac807054eed33fad7d1ff14` | MIT | vendored package and generated tasks | `benchmarks/automation-bench/` |
 | [rag-bench-essential](https://github.com/Prism-Shadow/rag-bench-essential) (PrismShadow), commit `979adae32d59c1b9a8a9d4ebd761c11c9d0f6e29` | MIT (code); case payloads under their source benchmarks' terms | vendored: the ten final cases, converted; redistributed by decision of the upstream owner (2026-10-04); upstream `LICENSE` and `THIRD_PARTY_NOTICES.md` at `benchmarks/rag-bench-essential/upstream-notices/` | `benchmarks/rag-bench-essential/`, `tools/rag_bench/` |
-| [GDPevo](https://github.com/Prism-Shadow/GDPevo) (Prism-Shadow), commit `56d60ae4ae5e067d1ec0ee1f850622e69f422179` | Apache-2.0 | vendored task groups (environments, tasks, graders, gold answers) and generated tasks; upstream `LICENSE` at `benchmarks/gdpevo-*/vendor/gdpevo-56d60ae/LICENSE` | `benchmarks/gdpevo-*/`, `tools/gdpevo/` |
+| [GDPevo](https://github.com/Prism-Shadow/GDPevo) (Prism-Shadow), commit `56d60ae4ae5e067d1ec0ee1f850622e69f422179` | Apache-2.0 | generated tasks (environments, inputs, graders and gold answers); upstream `LICENSE` at `data/gdpevo-essential-*/LICENSE` | `data/gdpevo-essential-*/`, `tools/gdpevo/` |
 
 ## GDPevo
 
-Licensed under the Apache License, Version 2.0 (the upstream repository carries no NOTICE file); the full licence text is kept with the vendored copy at `benchmarks/gdpevo-*/vendor/gdpevo-56d60ae/LICENSE`. The vendored directories under `benchmarks/gdpevo-*/vendor/gdpevo-56d60ae/data/task_groups/` are byte-for-byte copies of the selected task groups at the pinned commit (git tree ids in `MANIFEST.json`), and the generated tasks under `benchmarks/gdpevo-*/tasks/` contain GDPevo task data (prompts, payloads, graders, gold answers, the environment code and data in each task image) under the same licence. GDPevo carries no canary string.
+Licensed under the Apache License, Version 2.0 (the upstream repository carries no NOTICE file); the full licence text is kept at `data/gdpevo-essential-*/LICENSE`. The generated tasks under `data/gdpevo-essential-*/tasks/` contain GDPevo task data (prompts, payloads, graders, gold answers, environment code and data) under the same licence. Source commits and original task-group tree IDs are recorded in each scenario's `SOURCE.md`. The original checkout is supplied externally when regenerating tasks. GDPevo carries no canary string.
 
 ## AutomationBench
 

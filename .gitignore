@@ -1,5 +1,5 @@
 # Every pattern is rooted on purpose: vendored task directories under
-# benchmarks/*/tasks/ are copied verbatim and may legitimately contain files
+# benchmarks/*/tasks/ and data/ are copied verbatim and may legitimately contain files
 # such as .env, *.key or *.pyc that a global pattern would silently drop.
 
 # Harbor job output (trial logs, Penguin data roots with Traces). Never

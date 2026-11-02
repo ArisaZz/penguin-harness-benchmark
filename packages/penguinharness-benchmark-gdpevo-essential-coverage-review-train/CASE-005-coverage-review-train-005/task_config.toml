@@ -1,0 +1,8 @@
+id = "CASE-005-coverage-review-train-005"
+title = "Coverage Review: training question 005"
+description = "Northstar Health Plan's UM-finance huddle needs the May therapy margin queue summarized for payer-service actioning."
+
+[budget]
+cpus = 1
+ram = 2
+gpus = 0

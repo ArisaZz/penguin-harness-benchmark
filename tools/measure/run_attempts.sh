@@ -105,6 +105,12 @@ fi
 
 cd "$ROOT" || die "cannot enter the repository root"
 export PYTHONPATH="$ROOT/agents"
+benchmark_dir() {
+  case "$1" in
+    gdpevo-essential-*) printf 'data/%s' "$1" ;;
+    *) printf 'benchmarks/%s' "$1" ;;
+  esac
+}
 # BENCHES[i] runs BENCH_TASKS[i] (a comma-separated list) or, when that is empty, its job.yaml list.
 BENCHES=() BENCH_TASKS=()
 if [ -n "$TASKS_SPEC" ]; then
@@ -121,9 +127,11 @@ if [ -n "$TASKS_SPEC" ]; then
 elif [ -n "$BENCH_LIST" ]; then
   IFS=, read -ra BENCHES <<< "$BENCH_LIST"
 else
-  for job in benchmarks/*/job.yaml; do BENCHES+=("$(basename "$(dirname "$job")")"); done
+  for job in benchmarks/*/job.yaml data/*/job.yaml; do
+    [ -f "$job" ] && BENCHES+=("$(basename "$(dirname "$job")")")
+  done
 fi
-for bench in "${BENCHES[@]}"; do [ -f "benchmarks/$bench/job.yaml" ] || die "no benchmarks/$bench/job.yaml"; done
+for bench in "${BENCHES[@]}"; do [ -f "$(benchmark_dir "$bench")/job.yaml" ] || die "no job.yaml for $bench"; done
 
 # Dies unless every task of the comma-separated list is a candidate or final task of the
 # benchmark's selection.json, listed once, with a task directory.
@@ -137,7 +145,8 @@ root, bench, names = Path(sys.argv[1]), sys.argv[2], sys.argv[3].split(",")
 sys.path.insert(0, str(root / "tools"))
 from task_layout import relative_task_path, execution_task_names, task_members
 from gdpevo.catalog import is_gdpevo
-selection = json.loads((root / "benchmarks" / bench / "selection.json").read_text(encoding="utf-8"))
+from select_tasks import load
+selection = load(bench)
 status = {c["task"]: c["status"] for c in selection["candidates"]}
 if is_gdpevo(bench):
     for name in execution_task_names(bench, list(status)):
@@ -213,7 +222,7 @@ run_job() { # <benchmark> <job name> [harbor args...]
       return
     fi
   fi
-  local job_config="benchmarks/$bench/job.yaml"
+  local job_config="$(benchmark_dir "$bench")/job.yaml"
   # GDPevo has one dataset per group/split. Filter the job without flattening tasks.
   if [[ "$bench" = gdpevo-* ]] && [ "${1-}" = --gdpevo-tasks ]; then
     job_config="$STATE_DIR/$name.config.yaml"
@@ -246,7 +255,7 @@ subset_args() { # <benchmark> <task,task>: prints -p/-i arguments, one per line
     printf '%s\n' --gdpevo-tasks "$2"
     return
   fi
-  printf '%s\n' -p "benchmarks/$1/tasks"
+  printf '%s\n' -p "$(benchmark_dir "$1")/tasks"
   IFS=, read -ra names <<< "$2"
   for task in "${names[@]}"; do printf '%s\n' -i "$task"; done
 }
