@@ -122,7 +122,7 @@ def check(benchmark: str) -> list[str]:
 
     problems: list[str] = []
     selection = load(benchmark)
-    schema = json.loads((BENCHMARKS / "selection.schema.json").read_text())
+    schema = json.loads(Path(__file__).with_name("selection.schema.json").read_text())
     for error in jsonschema.Draft202012Validator(schema).iter_errors(selection):
         location = "/".join(str(part) for part in error.absolute_path) or "(root)"
         problems.append(f"selection.json {location}: {error.message}")

@@ -12,7 +12,7 @@
 #
 # For each attempt n, in order:
 #   1. tools/balance.py read --key-file <file> --out <jobs dir>/balance-<prefix>attempt-<n>-before.json
-#   2. one job per benchmark, all side by side: harbor run -c benchmarks/<id>/job.yaml
+#   2. one job per benchmark, all side by side: harbor run -c <task-data-directory>/job.yaml
 #      --job-name <prefix><id>-attempt-<n>, with --ak host_penguin_home (the data root whose
 #      model entry the adapter copies), --ak install_bundle, -n from --concurrency (else the
 #      job.yaml value) and, for the --shared-network benchmarks, --extra-docker-compose
