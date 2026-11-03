@@ -38,10 +38,10 @@ tools/                   收录、筛选、转换、汇总（summarize.py）、�
                          和 set_model_key.mjs；tools/measure/ 执行一次测量（见其 README.md）
 results/<version>/       PenguinHarness 某个发布版的实测结果（见 results/README.md）
 experiments/<leaderboard-id>/<experiment-id>/  实验元信息与各阶段结果
-leaderboards/<leaderboard-id>/                 榜单元信息与图表计算表达式
+leaderboards/<leaderboard-id>/leaderboard.yaml  榜单元信息与图表计算表达式
 ```
 
-[GDPEVO Essential 榜单](leaderboards/gdpevo-essential)汇总[四种 RSI 方法及 Baseline](experiments/gdpevo-essential)，每种方法包含六个独立的场景实验。
+[GDPEVO Essential 榜单](leaderboards/gdpevo-essential/leaderboard.yaml)汇总[四种 RSI 方法及 Baseline](experiments/gdpevo-essential)，每种方法包含六个独立的场景实验。
 
 ## 前提条件
 
