@@ -1,0 +1,9 @@
+time: null
+score_mean: 60.00
+score_std: 0.00
+n_attempt: 3
+cost: 0.26
+duration_ms: 1762852.00
+n_input_tokens: 12531381
+n_cache_tokens: 11972352
+n_output_tokens: 256528.67
